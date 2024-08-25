@@ -1,6 +1,7 @@
 ".env"
 *.mp3
 *.pyc
+*.cpy
 *.webm
 .env
 .swp
