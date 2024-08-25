@@ -2,3 +2,31 @@
 *.mp3
 *.pyc
 *.webm
+.env
+.swp
+
+# ignore all multimedia files
+*.mp3
+*.webm
+*.mp4
+*.mov
+*.avi
+*.flv
+*.mkv
+*.wmv
+*.swf
+*.wav
+*.aiff
+*.aif
+*.aifc
+
+# ignore all images
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.tif
+*.svg
+*.ico

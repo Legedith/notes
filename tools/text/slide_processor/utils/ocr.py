@@ -17,21 +17,21 @@ from PIL import Image
 
 
 class OCRProcessor:
-    def __init__(self, folder_path, tesseract_cmd=None):
+    def __init__(self, folder_path, tesseract_cmd=None) -> None:
         self.folder_path = folder_path
         if tesseract_cmd:
             pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
 
-    def process_images(self):
+    def process_images(self) -> dict:
         # Get all image files sorted by name
         image_files = sorted(
             [
                 f
                 for f in os.listdir(self.folder_path)
                 if f.lower().endswith(
-                    (".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".gif")
+                    (".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".gif"),
                 )
-            ]
+            ],
         )
 
         extracted_texts = {}
@@ -46,7 +46,7 @@ class OCRProcessor:
 
         return extracted_texts
 
-    def extract_text_from_image(self, image_path):
+    def extract_text_from_image(self, image_path) -> str:
         # Open the image using PIL
         image = Image.open(image_path)
 
@@ -62,9 +62,10 @@ class OCRProcessor:
 
 # Usage
 if __name__ == "__main__":
-    folder_path = "ocr_samples"
-    tesseract_cmd = r"path_to_your_tesseract_executable"  # Optional: set if not in PATH
-    ocr_processor = OCRProcessor(folder_path, tesseract_cmd)
+    folder_path = "tools/text/slide_processor/utils/ocr_samples"
+
+    # tesseract_cmd = r"path_to_your_tesseract_executable"  # Optional: set if not in PATH
+    ocr_processor = OCRProcessor(folder_path)
     results = ocr_processor.process_images()
 
     # Optionally, print the results
