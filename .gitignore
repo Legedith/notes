@@ -5,6 +5,8 @@
 *.webm
 .env
 .swp
+.pyc
+.cpy
 
 # ignore all multimedia files
 *.mp3
