@@ -5,7 +5,7 @@ from yt_dlp import YoutubeDL
 
 
 class YouTubeAudioExtractor:
-    def __init__(self, url):
+    def __init__(self, url) -> None:
         self.url = url
         self.audio_file = None
         self.download_folder = "downloads"
@@ -14,19 +14,20 @@ class YouTubeAudioExtractor:
         if not os.path.exists(self.download_folder):
             os.makedirs(self.download_folder)
 
-    def get_timestamp(self):
+    def get_timestamp(self) -> str:
         """Return the current timestamp in yyyymmddhhmm format."""
-        now = datetime.datetime.now()
+        now = datetime.datetime.now(datetime.timezone.utc)
         return now.strftime("%Y%m%d%H%M")
 
-    def download_audio(self):
+    def download_audio(self) -> str:
         """Download audio using yt-dlp and return the file path."""
         try:
             # Define the download options
             ydl_opts = {
                 "format": "bestaudio/best",  # Get the best audio quality
                 "outtmpl": os.path.join(
-                    self.download_folder, "%(title)s.%(ext)s"
+                    self.download_folder,
+                    "%(title)s.%(ext)s",
                 ),  # Save file in the specified folder
                 "noplaylist": True,  # Download only the single video
             }
@@ -39,7 +40,8 @@ class YouTubeAudioExtractor:
                 timestamp = self.get_timestamp()
                 file_extension = os.path.splitext(original_file)[1]
                 new_filename = os.path.join(
-                    self.download_folder, f"{timestamp}{file_extension}"
+                    self.download_folder,
+                    f"{timestamp}{file_extension}",
                 )
 
                 # Rename the downloaded file
@@ -52,15 +54,16 @@ class YouTubeAudioExtractor:
             print(f"Error downloading audio: {e}")
             return None
 
-    def extract_audio(self):
-        """Main method to download the audio and return the file path."""
+    def extract_audio(self) -> str:
+        """Return the file path."""
         return self.download_audio()
 
 
 if __name__ == "__main__":
     import sys
 
-    if len(sys.argv) != 2:
+    ARGS = 2
+    if len(sys.argv) != ARGS:
         print("Usage: python youtube_audio_extractor.py <YouTube URL>")
         sys.exit(1)
 
