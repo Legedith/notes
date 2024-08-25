@@ -11,6 +11,7 @@ import logging
 import os
 from datetime import datetime, timezone
 
+from core.post_processing.fill_slides import SlideReplacer
 from tools.audio.audio_extractor.whisper_extractor import WhisperAudioExtractor
 from tools.text.generator.notes_generator import NotesGenerator
 from tools.text.slide_processor.extractors.img_handler import ImageHandler
@@ -96,10 +97,15 @@ class NotesCreator:
         filename = f"note_{timestamp}.md"
         os.makedirs(folder_path, exist_ok=True)
         file_path = os.path.join(folder_path, filename)
+        replaced_markdown = SlideReplacer.replace_slides(
+            notes_content,
+            slides_folder_path,
+        )
+        print(replaced_markdown)
 
         try:
             with open(file_path, "w", encoding="utf-8") as file:
-                file.write(notes_content)
+                file.write(replaced_markdown)
             logger.info(f"Notes saved to {file_path}")
             print(f"\nNotes saved to: {file_path}\n")
             return f"{file_path}"
