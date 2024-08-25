@@ -68,7 +68,7 @@ class NotesCreator:
         }
         logger.info("Text extracted and formatted from images")
         print(
-            f"\nImage Texts: {image_texts}\nCleaned Image Texts: {cleaned_image_texts}\n"
+            f"\nImage Texts: {image_texts}\nCleaned Image Texts: {cleaned_image_texts}\n",
         )
 
         # Generate notes
@@ -81,30 +81,36 @@ class NotesCreator:
         logger.info("Notes generated successfully")
         print(f"\nNotes Content: {notes_content}\n")
 
+        # Save notes to a markdown file
+        return NotesCreator.save_notes_to_file(notes_content, self.slides_folder_path)
+
+    @staticmethod
+    def save_notes_to_file(notes_content, slides_folder_path) -> str:
+        logger.info("Saving notes to a markdown file")
+
         # Determine the parent directory of the slides folder
-        parent_dir = os.path.dirname(self.slides_folder_path)
+        parent_dir = os.path.dirname(slides_folder_path)
         folder_path = os.path.join(parent_dir, "ai_generated_notes")
 
-        # Save notes to a markdown file
-        logger.info("Saving notes to a markdown file")
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M")
-        filename = f"{title}_{timestamp}.md"
+        filename = f"note_{timestamp}.md"
         os.makedirs(folder_path, exist_ok=True)
         file_path = os.path.join(folder_path, filename)
 
-        with open(file_path, "w", encoding="utf-8") as file:
-            file.write(notes_content)
-        logger.info(f"Notes saved to {file_path}")
-        print(f"\nNotes saved to: {file_path}\n")
-
-        return f"Notes saved to {file_path}"
+        try:
+            with open(file_path, "w", encoding="utf-8") as file:
+                file.write(notes_content)
+            logger.info(f"Notes saved to {file_path}")
+            print(f"\nNotes saved to: {file_path}\n")
+            return f"{file_path}"
+        except Exception as e:
+            logger.error(f"Failed to save notes: {e}")
+            return f"Failed to save notes: {e}"
 
 
 # Usage
 if __name__ == "__main__":
-    youtube_url = "https://www.youtube.com/watch?v=8eVXTyIZ1Hs"
+    youtube_url = "https://www.youtube.com/watch?v=y872bCqQ_P0"
     slides_folder_path = "test/agile/slides"
-
     notes_creator = NotesCreator(youtube_url, slides_folder_path)
-    notes = notes_creator.generate_notes()
-    print(notes)
+    notes_creator.generate_notes()

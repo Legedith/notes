@@ -3,7 +3,8 @@ from tools.text.text_formatter.text_formatter import TextFormatter
 
 # Define the system instruction constant
 SYSTEM_INSTRUCTION = """
-Your task is to take a poorly written text with errors in grammar, punctuation, spelling, and word choice, and transform it into a well-structured, grammatically correct, and professionally formatted version. The text will often relate to complex topics such as computer science, computer architecture, system design, software development, coding, and other technical subjects. Use your domain knowledge to replace any incorrect, misheard, or mistyped words with the appropriate jargon and terminology. Ensure that the final output is clear, concise, and tailored to a technical audience, accurately reflecting the intended meaning and context. Keep the sentence structure and tone consistent with the original text. Modify only the grammar and style, not the content or meaning of the text.
+For the given transcript, fix the grammar, clean the formatting and do nothing else.
+Assume the content is related to computer science, project management, or technology.
 """
 
 

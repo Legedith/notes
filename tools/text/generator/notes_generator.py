@@ -8,7 +8,10 @@ Your inputs are title of the talk, transcript and slides dictionsry (slide numbe
 Your output should be well-structured notes in Markdown format.
 **Task Overview:**
 
-You are tasked with converting the provided transcript of a talk or lecture into comprehensive, well-structured notes. The notes should be formatted in Markdown and follow the sequence of the original text. Ensure the notes are easy to read, organized, and highlight important concepts, quotes, and terms.
+You are tasked with converting the provided transcript of a talk or lecture into comprehensive, well-structured notes.
+ The notes should be formatted in Markdown and follow the sequence of the original text.
+   Ensure the notes are easy to read, organized, and highlight important concepts, quotes, and terms.
+   Try to include as much relevant information as possible while maintaining clarity and coherence.
 
 ### **Instructions:**
 
@@ -21,8 +24,8 @@ You are tasked with converting the provided transcript of a talk or lecture into
      - *Italics* for emphasis.
      - `Code formatting` for technical terms or code snippets.
      - > Blockquotes for notable quotes or one-liners.
-     - [Insert_Image_of_Something_Here] for relevant imagery, when applicable.
-   - Mention slide numbers where appropriate using `[Insert_Slide_Number_Here]`.
+     - [Insert_Image_of_Something_Here] for relevant imagery, when applicable. Remember to describe the image inside the square brackets.
+   - Mention slide numbers where appropriate using `[Insert_Slide_Number_Here]`. Remember to put actual slide number here inside the square brackets.
 
 2. **Content Structure:**
    - **Follow the sequence** of the original transcript.
@@ -37,10 +40,11 @@ You are tasked with converting the provided transcript of a talk or lecture into
      - **Facts/Trivia/Tidbits**: Interesting facts or side information.
      - **Key Takeaways**: Summarize the essential points at the end.
    - Insert **important quotes, good one-liners, or noteworthy statements** wherever they naturally fit into the notes.
+   - Always try to add some sentences and quotes from the speaker to maintain the authenticity of the notes.
 
 3. **Content Integration:**
-   - **Integrate slide content** where relevant. Mention the slide number explicitly using `[Insert_Slide_Number_Here]`.
-   - If the content refers to a specific concept or example that can be visually represented, suggest inserting an image using `[Insert_Image_of_Something_Here]`.
+   - **Integrate slide content** where relevant. Mention the slide number explicitly using `[Insert_Slide_Number_Here]`. Remember to put actual slide number here inside the square brackets instead of Insert_Slide_Number_Here.
+   - If the content refers to a specific concept or example that can be visually represented, suggest inserting an image using `[Insert_Image_of_Something_Here]` Remember to describe the image inside the square brackets..
    - Ensure that **all sections are logically connected**, and the flow of information remains coherent and easy to follow.
 
 4. **Additional Considerations:**
@@ -57,6 +61,8 @@ A Markdown-formatted document with well-structured notes that:
 - Highlights important terms, quotes, and one-liners.
 - Suggests slide insertions and images where appropriate.
 - Provides clear, easy-to-read notes that are informative and organized.
+- Remeber to put in the slide numbers in the notes.
+- Remember to add images where necessary.
 """
 
 DOMAIN = "Computer Science, Project Management, Technology"
@@ -75,7 +81,10 @@ class NotesGenerator:
 
     def generate_notes(self) -> str:
         prompt = (
-            f"Title: {self.title}\nTranscript: {self.transcript}\nSlides: {self.slides}"
+            f"Title: {self.title}\n"
+            f"Transcript: {self.transcript}\n"
+            f"Slides: {self.slides}\n"
+            f"Prompt: {SYSTEM_INSTRUCTION}"
         )
         logger.info("Starting note generation")
         logger.debug(f"Prompt for note generation: {prompt}")
