@@ -1,3 +1,5 @@
+import logging
+
 from tools.llm.gemini import GeminiAI
 
 SYSTEM_INSTRUCTION = """
@@ -59,19 +61,28 @@ A Markdown-formatted document with well-structured notes that:
 
 DOMAIN = "Computer Science, Project Management, Technology"
 
+logger = logging.getLogger(__name__)
+
 
 class NotesGenerator:
     def __init__(self, title, transcript, slides) -> None:
+        logger.info(f"Initializing NotesGenerator with title: {title}")
         self.title = title
         self.transcript = transcript
         self.slides = slides
         self.ai = GeminiAI(system_instruction=SYSTEM_INSTRUCTION)
+        logger.info("NotesGenerator initialized successfully")
 
     def generate_notes(self) -> str:
         prompt = (
             f"Title: {self.title}\nTranscript: {self.transcript}\nSlides: {self.slides}"
         )
-        return self.ai.generate_content(prompt)
+        logger.info("Starting note generation")
+        logger.debug(f"Prompt for note generation: {prompt}")
+        notes = self.ai.generate_content(prompt)
+        logger.info("Note generation completed")
+        logger.debug(f"Generated notes: {notes}")
+        return notes
 
 
 # Example Usage

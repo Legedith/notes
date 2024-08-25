@@ -621,6 +621,16 @@ files = [
 ]
 
 [[package]]
+name = "logger"
+version = "1.4"
+description = "Python logging helper"
+optional = false
+python-versions = "*"
+files = [
+    {file = "logger-1.4.tar.gz", hash = "sha256:4ecac57133c6376fa215f0fe6b4dc4d60e4d1ad8be005cab4e8a702df682f8b3"},
+]
+
+[[package]]
 name = "more-itertools"
 version = "10.4.0"
 description = "More routines for operating on iterables, beyond itertools"
@@ -1511,4 +1521,4 @@ test = ["pytest (>=8.1,<9.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9, <3.11"
-content-hash = "400e1e147ad24d5ac6b0c7304337e15dabb6b6790109411b770ae5a3459d2b96"
+content-hash = "0b46e9907fe676cb68c41f6702b15514d91436e5a666eda6a1bbf3ae1a78d1a0"
