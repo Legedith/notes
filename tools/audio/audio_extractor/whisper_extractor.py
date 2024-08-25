@@ -4,8 +4,8 @@ from tools.audio.audio_extractor.extractor import AudioExtractor
 
 
 class WhisperAudioExtractor(AudioExtractor):
-    def __init__(self, model_size="medium"):
-        self.model = whisper.load_model(model_size)
+    def __init__(self, model_size="base") -> None:
+        self.model = whisper.load_model(model_size, device="cuda")
 
     def extract_text(self, audio_file) -> str:
         # Transcribe the audio
@@ -19,6 +19,6 @@ class WhisperAudioExtractor(AudioExtractor):
 if __name__ == "__main__":
     whisper_audio_extractor = WhisperAudioExtractor()
     text = whisper_audio_extractor.extract_text(
-        "tools/audio/audio_extractor/samples/audio1.mp3"
+        "downloads/202408251318.webm",
     )
     print(text)

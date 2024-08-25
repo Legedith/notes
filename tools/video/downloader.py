@@ -19,8 +19,8 @@ class YouTubeAudioExtractor:
         now = datetime.datetime.now(datetime.timezone.utc)
         return now.strftime("%Y%m%d%H%M")
 
-    def download_audio(self) -> str:
-        """Download audio using yt-dlp and return the file path."""
+    def download_audio(self) -> tuple:
+        """Download audio using yt-dlp and return the file path and video title."""
         try:
             # Define the download options
             ydl_opts = {
@@ -36,6 +36,9 @@ class YouTubeAudioExtractor:
                 info_dict = ydl.extract_info(self.url, download=True)
                 original_file = ydl.prepare_filename(info_dict)
 
+                # Extract the video title
+                video_title = info_dict.get("title", "Unknown Title")
+
                 # Generate the new filename with timestamp
                 timestamp = self.get_timestamp()
                 file_extension = os.path.splitext(original_file)[1]
@@ -49,13 +52,13 @@ class YouTubeAudioExtractor:
 
                 self.audio_file = new_filename
                 print(f"Downloaded audio file: {self.audio_file}")
-                return self.audio_file
+                return self.audio_file, video_title
         except Exception as e:
             print(f"Error downloading audio: {e}")
-            return None
+            return None, None
 
-    def extract_audio(self) -> str:
-        """Return the file path."""
+    def extract_audio(self) -> tuple:
+        """Return the file path and video title."""
         return self.download_audio()
 
 
@@ -69,6 +72,7 @@ if __name__ == "__main__":
 
     url = sys.argv[1]
     extractor = YouTubeAudioExtractor(url)
-    audio_path = extractor.extract_audio()
+    audio_path, video_title = extractor.extract_audio()
     if audio_path:
         print(f"Audio file saved at: {audio_path}")
+        print(f"Video title: {video_title}\n")
