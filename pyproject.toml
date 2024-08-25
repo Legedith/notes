@@ -7,11 +7,12 @@ readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.9, <3.11"
 google-generativeai = "^0.7.2"
 python-dotenv = "^1.0.1"
-openai-whisper = {git = "https://github.com/openai/whisper.git"}
-
+openai-whisper = { git = "https://github.com/openai/whisper.git", rev = "v20231117" }
+numpy = "<2.0.0"
+torchvision = "0.19.0+cu124"
 
 [build-system]
 requires = ["poetry-core"]
