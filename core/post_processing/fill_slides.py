@@ -23,7 +23,7 @@ class SlideReplacer:
             slide_number = int(match)
             if 1 <= slide_number <= len(images):
                 image_name = images[slide_number - 1]
-                image_url = f"http://127.0.0.1:5500/test/agile/slides/{image_name}"
+                image_url = f"http://127.0.0.1:5500/test/game/slides/{image_name}"
                 markdown = re.sub(
                     rf"`?\[Slide {slide_number}\]`?",
                     f'<br><img src="{image_url}" alt="Slide {slide_number}" width="600"><br>',

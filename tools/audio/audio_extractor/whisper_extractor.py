@@ -38,6 +38,9 @@ class WhisperAudioExtractor(AudioExtractor):
         logger.info(f"Transcription completed for audio file: {audio_file}")
         logger.debug(f"Transcription result: {result['text']}")
 
+        result = {
+            "text": result["text"],
+        }
         # Save the result to cache
         with open(cache_file, "w") as f:
             json.dump(result, f)

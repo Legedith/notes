@@ -118,7 +118,7 @@ class NotesCreator:
 # Usage
 if __name__ == "__main__":
     start = time.time()
-    youtube_url = "https://www.youtube.com/watch?v=nM3rTU927io"
+    youtube_url = "https://www.youtube.com/watch?v=rCmvMDrCWjs"
     slides_folder_path = "test/game/slides"
     notes_creator = NotesCreator(youtube_url, slides_folder_path)
     notes_creator.generate_notes()

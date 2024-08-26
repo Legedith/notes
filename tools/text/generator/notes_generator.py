@@ -3,20 +3,23 @@ import logging
 from tools.llm.gemini import GeminiAI
 
 SYSTEM_INSTRUCTION = """
-You convert Transcript to Notes.
-Your inputs are title of the talk, transcript and slides dictionsry (slide number and content).
-Your output should be well-structured notes in Markdown format.
-**Task Overview:**
+Task: Convert Transcript to Markdown Notes
 
-You are tasked with converting the provided transcript of a talk or lecture into comprehensive, well-structured notes.
+Inputs: Title, transcript, and slides dictionary (slide number and content).
+
+Output: Comprehensive, well-structured notes in Markdown.
+
+Instructions:
+
+Convert the transcript into detailed, organized notes.
+Capture all key points, examples, and explanations without missing critical details.
+Follow the sequence of the transcript, ensuring clarity and coherence.
+Highlight important concepts, quotes, and terms.
+Integrate slide content where relevant, suggesting slide insertions and images.
 The notes should be detailed enough that anyone reading them would have a clear understanding of everything discussed in the talk/lecture.
 The notes should not miss any critical points or examples mentioned in the transcript.
-The notes should be formatted in Markdown and follow the sequence of the original text.
 Ensure the notes are easy to read, organized, and highlight important concepts, quotes, and terms.
-Try to include as much relevant information as possible while maintaining clarity and coherence.
-Make sure to include everything important from the transcript, such as key points, examples, and explanations.
-Integrate slide content where relevant by suggesting slide insertions and images.
-
+Include important key points, examples, and explanations.
 
 ### **Instructions:**
 
@@ -24,13 +27,17 @@ Integrate slide content where relevant by suggesting slide insertions and images
    - Use **Markdown** for all formatting.
    - Create **sections** and **subsections** based on the content.
    - Use **bullet points** for key points, ensuring ease of reading.
+   - Use paragraphs to elaborate on key points and provide additional context.
+   - Use tables where necessary.
+   - Use proper formating for comparisons.
+   - Use inline html for adding colors to make the notes beautiful.
    - Highlight important terms using:
      - **Bold** for critical terms or concepts.
      - *Italics* for emphasis.
      - `Code formatting` for technical terms or code snippets.
      - > Blockquotes for notable quotes or one-liners.
      - [Image_query] for relevant imagery, when applicable. Remember to describe the image inside the square brackets using plain english.
-   - Mention slide numbers where appropriate in format `[Slide_number]`. Remember to put actual slide number here inside the square brackets.
+   - Mention slide numbers where appropriate in format `[Slide number]`. Remember to put actual slide number here inside the square brackets.
 
 2. **Content Structure:**
    - **Follow the sequence** of the original transcript.
@@ -48,7 +55,7 @@ Integrate slide content where relevant by suggesting slide insertions and images
    - Always try to add some sentences and quotes from the speaker to maintain the authenticity of the notes.
 
 3. **Content Integration:**
-   - **Integrate slide content** where relevant. Mention the slide number explicitly using `[Slide_number]`. Remember to put actual slide number here inside the square brackets instead of Slide_number.
+   - **Integrate slide content** where relevant. Mention the slide number explicitly using `[Slide number]`.
    - Example of slide content integration:
       - **Slide 5**: Discusses the importance of algorithms in problem-solving.
       [Slide 5]
@@ -63,12 +70,13 @@ Integrate slide content where relevant by suggesting slide insertions and images
    - Assume that the content is related to computer science, project management, or technology unless specified otherwise.
    - Maintain a professional tone, keeping the audience in mind (likely students, professionals, or researchers).
    - The notes should be **concise but informative**, capturing the essence of the talk without unnecessary detail.
+   - Put longer paragraphs where it would help in explaining or elaborating a concept.
 
 ### **Expected Output:**
 
 A Markdown-formatted document with well-structured notes that:
 - Reflects the sequence of the original transcript.
-- Includes sections, subsections, summaries, and bullet points.
+- Includes sections, subsections, summaries, paragraph, explanations and bullet points.
 - Highlights important terms, quotes, and one-liners.
 - Suggests slide insertions and images where appropriate.
 - Provides clear, easy-to-read notes that are informative and organized.
@@ -76,7 +84,9 @@ A Markdown-formatted document with well-structured notes that:
 - Remember to add images where necessary.
 """
 
-DOMAIN = "Computer Science, Project Management, Technology"
+DOMAIN = (
+    "Computer Science, Project Management, Technology, Mathematics, Sciences, Research"
+)
 
 logger = logging.getLogger(__name__)
 
@@ -90,19 +100,40 @@ class NotesGenerator:
         self.ai = GeminiAI(system_instruction=SYSTEM_INSTRUCTION)
         logger.info("NotesGenerator initialized successfully")
 
-    def generate_notes(self) -> str:
-        prompt = (
-            f"Title: {self.title}\n"
-            f"Transcript: {self.transcript}\n"
-            f"Slides: {self.slides}\n"
-            f"Prompt: {SYSTEM_INSTRUCTION}"
+    def split_transcript(self, transcript, max_length=18000) -> list:
+        chunks = []
+        while len(transcript) > max_length:
+            split_point = transcript.rfind(" ", 0, max_length)
+            if split_point == -1:
+                split_point = max_length
+            chunks.append(transcript[:split_point])
+            transcript = transcript[split_point:]
+        chunks.append(transcript)
+        return chunks
+
+    def generate_notes_for_chunk(self, chunk, chunk_number, previous_summary) -> str:
+        chunk_with_context = (
+            f"Chunk {chunk_number}\nPrevious Summary: {previous_summary}\n\n{chunk}"
         )
-        logger.info("Starting note generation")
-        logger.debug(f"Prompt for note generation: {prompt}")
-        notes = self.ai.generate_content(prompt)
-        logger.info("Note generation completed")
-        logger.debug(f"Generated notes: {notes}")
-        return notes
+        return self.ai.generate_content(chunk_with_context)
+
+    def generate_notes(self) -> str:
+        chunks = self.split_transcript(self.transcript)
+        all_notes = []
+        previous_summary = ""
+
+        for i, chunk in enumerate(chunks):
+            chunk_number = i + 1
+            notes = self.generate_notes_for_chunk(chunk, chunk_number, previous_summary)
+            all_notes.append(notes)
+            previous_summary = self.extract_summary_from_notes(notes)
+
+        return "\n\n".join(all_notes)
+
+    def extract_summary_from_notes(self, notes) -> str:
+        # for now, let's just return the first 2 and last two lines as summary
+        lines = notes.split("\n")
+        return "\n".join(lines[:2] + lines[-2:])
 
 
 # Example Usage
