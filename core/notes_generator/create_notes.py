@@ -9,6 +9,7 @@
 # 6. prepare the notes
 import logging
 import os
+import time
 from datetime import datetime, timezone
 
 from core.post_processing.fill_slides import SlideReplacer
@@ -116,7 +117,10 @@ class NotesCreator:
 
 # Usage
 if __name__ == "__main__":
-    youtube_url = "https://www.youtube.com/watch?v=y872bCqQ_P0"
-    slides_folder_path = "test/agile/slides"
+    start = time.time()
+    youtube_url = "https://www.youtube.com/watch?v=nM3rTU927io"
+    slides_folder_path = "test/game/slides"
     notes_creator = NotesCreator(youtube_url, slides_folder_path)
     notes_creator.generate_notes()
+    end = time.time()
+    print(f"Time taken: {end - start} seconds")

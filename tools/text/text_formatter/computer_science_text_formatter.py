@@ -14,8 +14,28 @@ class ComputerScienceTextFormatter(TextFormatter):
         self.ai = GeminiAI(system_instruction=SYSTEM_INSTRUCTION)
 
     def format_text(self, text, domain) -> str:
-        prompt = f"Domain: {domain}\nText: {text}"
-        return self.ai.generate_content(prompt)
+        batch_size = 20000
+        overlap = 1000
+        batches = []
+        start = 0
+
+        while start < len(text):
+            end = min(start + batch_size, len(text))
+            batch = text[start:end]
+            batches.append(batch)
+            start = end - overlap
+
+        processed_batches = [
+            self.ai.generate_content(f"Domain: {domain}\nText: {batch}")
+            for batch in batches
+        ]
+
+        # Stitch the processed batches together
+        stitched_text = processed_batches[0]
+        for i in range(1, len(processed_batches)):
+            stitched_text += processed_batches[i][overlap:]
+
+        return stitched_text
 
 
 # Example usage

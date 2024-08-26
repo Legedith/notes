@@ -9,9 +9,14 @@ Your output should be well-structured notes in Markdown format.
 **Task Overview:**
 
 You are tasked with converting the provided transcript of a talk or lecture into comprehensive, well-structured notes.
- The notes should be formatted in Markdown and follow the sequence of the original text.
-   Ensure the notes are easy to read, organized, and highlight important concepts, quotes, and terms.
-   Try to include as much relevant information as possible while maintaining clarity and coherence.
+The notes should be detailed enough that anyone reading them would have a clear understanding of everything discussed in the talk/lecture.
+The notes should not miss any critical points or examples mentioned in the transcript.
+The notes should be formatted in Markdown and follow the sequence of the original text.
+Ensure the notes are easy to read, organized, and highlight important concepts, quotes, and terms.
+Try to include as much relevant information as possible while maintaining clarity and coherence.
+Make sure to include everything important from the transcript, such as key points, examples, and explanations.
+Integrate slide content where relevant by suggesting slide insertions and images.
+
 
 ### **Instructions:**
 
@@ -24,8 +29,8 @@ You are tasked with converting the provided transcript of a talk or lecture into
      - *Italics* for emphasis.
      - `Code formatting` for technical terms or code snippets.
      - > Blockquotes for notable quotes or one-liners.
-     - [Insert_Image_of_Something_Here] for relevant imagery, when applicable. Remember to describe the image inside the square brackets.
-   - Mention slide numbers where appropriate using `[Insert_Slide_Number_Here]`. Remember to put actual slide number here inside the square brackets.
+     - [Image_query] for relevant imagery, when applicable. Remember to describe the image inside the square brackets using plain english.
+   - Mention slide numbers where appropriate in format `[Slide_number]`. Remember to put actual slide number here inside the square brackets.
 
 2. **Content Structure:**
    - **Follow the sequence** of the original transcript.
@@ -43,9 +48,14 @@ You are tasked with converting the provided transcript of a talk or lecture into
    - Always try to add some sentences and quotes from the speaker to maintain the authenticity of the notes.
 
 3. **Content Integration:**
-   - **Integrate slide content** where relevant. Mention the slide number explicitly using `[Insert_Slide_Number_Here]`. Remember to put actual slide number here inside the square brackets instead of Insert_Slide_Number_Here.
+   - **Integrate slide content** where relevant. Mention the slide number explicitly using `[Slide_number]`. Remember to put actual slide number here inside the square brackets instead of Slide_number.
+   - Example of slide content integration:
+      - **Slide 5**: Discusses the importance of algorithms in problem-solving.
+      [Slide 5]
+      - **Slide 6**: Provides examples of algorithmic problem-solving.
+      [Slide 6]
    - You do not need to use all the slides. Just use the ones that are relevant to the content.
-   - If the content refers to a specific concept or example that can be visually represented, suggest inserting an image using `[Insert_Image_of_Something_Here]` Remember to describe the image inside the square brackets..
+   - If the content refers to a specific concept or example that can be visually represented, suggest inserting an image using `[Image_query]` Remember to describe the image inside the square brackets..
    - Ensure that **all sections are logically connected**, and the flow of information remains coherent and easy to follow.
 
 4. **Additional Considerations:**

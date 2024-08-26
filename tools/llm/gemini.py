@@ -35,6 +35,10 @@ class GeminiAI:
                 if attempt < max_retries:
                     logger.info(f"Retrying in {wait_time} seconds...")
                     time.sleep(wait_time)
+                    # get gemini key
+                    # select a key at random
+                    # reconfigure the gemini api
+                    # retry the request
                 else:
                     logger.error(f"Failed after {max_retries} attempts: {e}")
                     raise

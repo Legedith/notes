@@ -1,5 +1,6 @@
 import datetime
 import os
+import re
 
 from yt_dlp import YoutubeDL
 
@@ -19,6 +20,10 @@ class YouTubeAudioExtractor:
         now = datetime.datetime.now(datetime.timezone.utc)
         return now.strftime("%Y%m%d%H%M")
 
+    def sanitize_title(self, title: str) -> str:
+        """Sanitize the video title to be used as a filename."""
+        return re.sub(r"[^a-zA-Z]", "", title.replace(" ", "_"))
+
     def download_audio(self) -> tuple:
         """Download audio using yt-dlp and return the file path and video title."""
         try:
@@ -33,26 +38,35 @@ class YouTubeAudioExtractor:
             }
             # Use yt-dlp to download audio
             with YoutubeDL(ydl_opts) as ydl:
-                info_dict = ydl.extract_info(self.url, download=True)
-                original_file = ydl.prepare_filename(info_dict)
-
-                # Extract the video title
+                info_dict = ydl.extract_info(self.url, download=False)
                 video_title = info_dict.get("title", "Unknown Title")
 
-                # Generate the new filename with timestamp
-                timestamp = self.get_timestamp()
-                file_extension = os.path.splitext(original_file)[1]
+                # Sanitize the video title
+                sanitized_title = self.sanitize_title(video_title)
+
+                # Generate the new filename with sanitized title
+                file_extension = info_dict.get("ext", "m4a")
                 new_filename = os.path.join(
                     self.download_folder,
-                    f"{timestamp}{file_extension}",
+                    f"{sanitized_title}.{file_extension}",
                 )
+
+                # Check if the file already exists
+                if os.path.exists(new_filename):
+                    print(f"File already exists: {new_filename}")
+                    self.audio_file = new_filename
+                    return self.audio_file, sanitized_title
+
+                # Proceed with the download
+                info_dict = ydl.extract_info(self.url, download=True)
+                original_file = ydl.prepare_filename(info_dict)
 
                 # Rename the downloaded file
                 os.rename(original_file, new_filename)
 
                 self.audio_file = new_filename
                 print(f"Downloaded audio file: {self.audio_file}")
-                return self.audio_file, video_title
+                return self.audio_file, sanitized_title
         except Exception as e:
             print(f"Error downloading audio: {e}")
             return None, None

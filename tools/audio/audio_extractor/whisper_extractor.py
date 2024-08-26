@@ -1,4 +1,6 @@
+import json
 import logging
+import os
 
 import whisper
 
@@ -14,11 +16,31 @@ class WhisperAudioExtractor(AudioExtractor):
         logger.info("Whisper model initialized successfully")
 
     def extract_text(self, audio_file) -> str:
+        # Ensure cache directory exists
+        cache_dir = "cache"
+        os.makedirs(cache_dir, exist_ok=True)
+
+        # Generate cache file path
+        cache_file = os.path.join(cache_dir, f"{os.path.basename(audio_file)}.json")
+
+        # Check if transcription result is already cached
+        if os.path.exists(cache_file):
+            logger.info(
+                f"Reading transcription from cache for audio file: {audio_file}",
+            )
+            with open(cache_file) as f:
+                cached_result = json.load(f)
+            return cached_result["text"]
+
         logger.info(f"Starting transcription for audio file: {audio_file}")
         # Transcribe the audio
         result = self.model.transcribe(audio_file)
         logger.info(f"Transcription completed for audio file: {audio_file}")
         logger.debug(f"Transcription result: {result['text']}")
+
+        # Save the result to cache
+        with open(cache_file, "w") as f:
+            json.dump(result, f)
 
         # Return the recognized text
         return result["text"]
