@@ -44,6 +44,7 @@ You are tasked with converting the provided transcript of a talk or lecture into
 
 3. **Content Integration:**
    - **Integrate slide content** where relevant. Mention the slide number explicitly using `[Insert_Slide_Number_Here]`. Remember to put actual slide number here inside the square brackets instead of Insert_Slide_Number_Here.
+   - You do not need to use all the slides. Just use the ones that are relevant to the content.
    - If the content refers to a specific concept or example that can be visually represented, suggest inserting an image using `[Insert_Image_of_Something_Here]` Remember to describe the image inside the square brackets..
    - Ensure that **all sections are logically connected**, and the flow of information remains coherent and easy to follow.
 
