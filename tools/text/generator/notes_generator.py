@@ -20,6 +20,10 @@ The notes should be detailed enough that anyone reading them would have a clear 
 The notes should not miss any critical points or examples mentioned in the transcript.
 Ensure the notes are easy to read, organized, and highlight important concepts, quotes, and terms.
 Include important key points, examples, and explanations.
+Always Color the notes using inline html to make them appear nice and readable.
+eg: <span style="color:blue">some blue text</span>.
+Markdown formatting wont work inside the <span> tag.
+Apply the markdown formatting outside the <span> tag.
 
 ### **Instructions:**
 
@@ -32,6 +36,7 @@ Include important key points, examples, and explanations.
    - Use proper formating for comparisons.
    - Use inline html for adding colors to make the notes beautiful.
    - Highlight important terms using:
+     - Use color highlighting using inline html for improved redabiliy.
      - **Bold** for critical terms or concepts.
      - *Italics* for emphasis.
      - `Code formatting` for technical terms or code snippets.
@@ -75,6 +80,7 @@ Include important key points, examples, and explanations.
 ### **Expected Output:**
 
 A Markdown-formatted document with well-structured notes that:
+- Have good colouring for readability.
 - Reflects the sequence of the original transcript.
 - Includes sections, subsections, summaries, paragraph, explanations and bullet points.
 - Highlights important terms, quotes, and one-liners.

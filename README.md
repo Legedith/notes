@@ -10,3 +10,5 @@ poetry install
 
 if fail
 got to toml file
+
+add timestamp links to youtube for each section
