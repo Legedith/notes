@@ -41,3 +41,5 @@
 # ignore pyc and cpy files
 **/*.pyc
 **/*.cpy
+**/*.json
+**.*.pdf
