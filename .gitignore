@@ -1,9 +1,13 @@
 ".env"
 *.mp3
 *.pyc
+*.cpy
 *.webm
 .env
 .swp
+.pyc
+.cpy
+.md
 
 # ignore all multimedia files
 *.mp3
@@ -30,3 +34,17 @@
 *.tif
 *.svg
 *.ico
+
+# ignore md file in any folder
+**/*.md
+
+# ignore pyc and cpy files
+**/*.pyc
+**/*.cpy
+**/*.json
+**/*.pdf
+**/*.webp
+
+.pdf
+.json
+
