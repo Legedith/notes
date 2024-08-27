@@ -1,9 +1,9 @@
 import fitz  # Import the PyMuPDF library
 
 
-def extract_text_from_pdf(pdf_file_path):
+def extract_text_from_pdf(pdf_file_path) -> str:
     """
-    Extracts text from a PDF file using PyMuPDF.
+    Extract text from a PDF file using PyMuPDF.
 
     Args:
         pdf_file_path (str): The path to the PDF file.
