@@ -15,7 +15,7 @@ class WhisperAudioExtractor(AudioExtractor):
         self.model = whisper.load_model(model_size, device="cuda")
         logger.info("Whisper model initialized successfully")
 
-    def extract_text(self, audio_file) -> str:
+    def extract_text(self, audio_file) -> tuple:
         # Ensure cache directory exists
         cache_dir = "cache"
         os.makedirs(cache_dir, exist_ok=True)
@@ -30,23 +30,23 @@ class WhisperAudioExtractor(AudioExtractor):
             )
             with open(cache_file) as f:
                 cached_result = json.load(f)
-            return cached_result["text"]
+            return cached_result["text"], cached_result["segments"]
 
         logger.info(f"Starting transcription for audio file: {audio_file}")
         # Transcribe the audio
-        result = self.model.transcribe(audio_file)
+        result = self.model.transcribe(audio_file, language="en")
         logger.info(f"Transcription completed for audio file: {audio_file}")
         logger.debug(f"Transcription result: {result['text']}")
 
-        result = {
-            "text": result["text"],
-        }
+        # result = {
+        #     "text": result["text"],
+        # }
         # Save the result to cache
         with open(cache_file, "w") as f:
             json.dump(result, f)
 
         # Return the recognized text
-        return result["text"]
+        return result["text"], result["segments"]
 
 
 # sample usage

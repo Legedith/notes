@@ -1,3 +1,4 @@
+import json
 import logging
 
 from tools.llm.gemini import GeminiAI
@@ -66,8 +67,11 @@ class ComputerScienceTextFormatter(TextFormatter):
 
 # Example usage
 if __name__ == "__main__":
-    text = """Hi, this is Jadid Ramival, I'm a robotics and augmented reality developer with almost three years of experience in the industry. I am Sravana Lakshmi, a data scientist and an MBA graduate. Together, we are from RoboVice. So we came up with this idea of RoboVice when we were working on a robotic arm and we almost managed to kill someone because we forgot to set some parameters while testing our robot out. RoboVice gives a way to test your robot in augmented reality before running it in real world. We know that robots are safe from the risk and it is the most safest way and faster way to control the robots. So our technology is backed by Snapchat and we are currently ready with our POC with millimeter precision. RoboVice is deployable on any raw space robot in the industry from a small robotic arm to big industrial machines. And we know that having skilled experts and safety are the biggest concerns to deploy the robots in industries. With RoboVice, we plan to change that. Thank you.
-"""
+    # Load text from JSON file
+    with open("cache/202408251318.webm.json") as file:
+        data = json.load(file)
+        text = data["text"]
+
     domain = "Development"
     formatter = ComputerScienceTextFormatter()
     corrected_text = formatter.format_text(text, domain)

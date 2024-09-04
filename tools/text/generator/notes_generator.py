@@ -2,6 +2,11 @@ import logging
 
 from tools.llm.gemini import GeminiAI
 
+# Always Color the notes using inline html to make them appear nice and readable.
+# eg: <span style="color:blue">some blue text</span>.
+# Markdown formatting wont work inside the <span> tag.
+# Apply the markdown formatting outside the <span> tag.
+
 SYSTEM_INSTRUCTION = """
 Task: Convert Transcript to Markdown Notes
 
@@ -20,10 +25,6 @@ The notes should be detailed enough that anyone reading them would have a clear 
 The notes should not miss any critical points or examples mentioned in the transcript.
 Ensure the notes are easy to read, organized, and highlight important concepts, quotes, and terms.
 Include important key points, examples, and explanations.
-Always Color the notes using inline html to make them appear nice and readable.
-eg: <span style="color:blue">some blue text</span>.
-Markdown formatting wont work inside the <span> tag.
-Apply the markdown formatting outside the <span> tag.
 
 ### **Instructions:**
 
@@ -34,9 +35,7 @@ Apply the markdown formatting outside the <span> tag.
    - Use paragraphs to elaborate on key points and provide additional context.
    - Use tables where necessary.
    - Use proper formating for comparisons.
-   - Use inline html for adding colors to make the notes beautiful.
    - Highlight important terms using:
-     - Use color highlighting using inline html for improved redabiliy.
      - **Bold** for critical terms or concepts.
      - *Italics* for emphasis.
      - `Code formatting` for technical terms or code snippets.

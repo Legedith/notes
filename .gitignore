@@ -23,7 +23,7 @@
 *.aiff
 *.aif
 *.aifc
-
+*.html
 # ignore all images
 *.jpg
 *.jpeg
@@ -37,7 +37,7 @@
 
 # ignore md file in any folder
 **/*.md
-
+*.pyc
 # ignore pyc and cpy files
 **/*.pyc
 **/*.cpy

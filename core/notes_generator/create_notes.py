@@ -13,6 +13,7 @@ import time
 from datetime import datetime, timezone
 
 from core.post_processing.fill_slides import SlideReplacer
+from core.post_processing.timestamp import TimestampedNoteProcessor
 from tools.audio.audio_extractor.whisper_extractor import WhisperAudioExtractor
 from tools.text.generator.notes_generator import NotesGenerator
 from tools.text.slide_processor.extractors.img_handler import ImageHandler
@@ -28,7 +29,8 @@ logging.basicConfig(level=logging.INFO)
 class NotesCreator:
     def __init__(self, youtube_url, slides_folder_path, tesseract_cmd=None) -> None:
         logger.info(
-            f"Initializing NotesCreator with YouTube URL: {youtube_url} and slides folder path: {slides_folder_path}",
+            f"Initializing NotesCreator with YouTube URL: {youtube_url} and "
+            f"slides folder path: {slides_folder_path}",
         )
         self.youtube_url = youtube_url
         self.slides_folder_path = slides_folder_path
@@ -53,7 +55,7 @@ class NotesCreator:
 
         # Extract text from audio
         logger.info("Extracting text from audio")
-        audio_text = self.whisper_audio_extractor.extract_text(audio_path)
+        audio_text, segments = self.whisper_audio_extractor.extract_text(audio_path)
         cleaned_audio_text = self.text_formatter.format_text(
             audio_text,
             domain=video_title,
@@ -83,8 +85,21 @@ class NotesCreator:
         logger.info("Notes generated successfully")
         print(f"\nNotes Content: {notes_content}\n")
 
+        # Process notes with timestamps
+        logger.info("Processing notes with timestamps")
+        note_processor = TimestampedNoteProcessor(segments)
+        new_notes_content, matches = note_processor.process_notes(
+            notes_content,
+            self.youtube_url,
+        )
+        logger.info("Notes processed with timestamps")
+        print(f"\nNew Notes Content: {new_notes_content}\nMatches: {matches}\n")
+
         # Save notes to a markdown file
-        return NotesCreator.save_notes_to_file(notes_content, self.slides_folder_path)
+        return NotesCreator.save_notes_to_file(
+            new_notes_content,
+            self.slides_folder_path,
+        )
 
     @staticmethod
     def save_notes_to_file(notes_content, slides_folder_path) -> str:
@@ -118,8 +133,8 @@ class NotesCreator:
 # Usage
 if __name__ == "__main__":
     start = time.time()
-    youtube_url = "https://www.youtube.com/watch?v=iqQgED9vV7k"
-    slides_folder_path = "test/neural/slides"
+    youtube_url = "https://youtu.be/j2w_hYLzpi4"
+    slides_folder_path = "test/bcg/slides"
     notes_creator = NotesCreator(youtube_url, slides_folder_path)
     notes_creator.generate_notes()
     end = time.time()

@@ -17,6 +17,12 @@ torch = "2.4.0+cu124"
 pytesseract = "^0.3.13"
 yt-dlp = "^2024.8.6"
 logger = "^1.4"
+beautifulsoup4 = "^4.12.3"
+markdown = "^3.7"
+nltk = "^3.9.1"
+transformers = "^4.44.2"
+fuzzywuzzy = "^0.18.0"
+python-levenshtein = "^0.25.1"
 
 [build-system]
 requires = ["poetry-core"]
