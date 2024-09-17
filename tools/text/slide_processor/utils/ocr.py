@@ -40,7 +40,7 @@ class OCRProcessor:
         for idx, image_file in enumerate(image_files):
             image_path = os.path.join(self.folder_path, image_file)
             text = self.extract_text_from_image(image_path)
-            slide_name = f"slide {idx + 1}"
+            slide_name = f"{idx + 1}"
             extracted_texts[slide_name] = text
             print(f"Processed {slide_name}: {image_file}")
 

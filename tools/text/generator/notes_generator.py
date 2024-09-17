@@ -10,7 +10,7 @@ from tools.llm.gemini import GeminiAI
 SYSTEM_INSTRUCTION = """
 Task: Convert Transcript to Markdown Notes
 
-Inputs: Title, transcript, and slides dictionary (slide number and content).
+Inputs: Title, transcript.
 
 Output: Comprehensive, well-structured notes in Markdown.
 
@@ -20,7 +20,7 @@ Convert the transcript into detailed, organized notes.
 Capture all key points, examples, and explanations without missing critical details.
 Follow the sequence of the transcript, ensuring clarity and coherence.
 Highlight important concepts, quotes, and terms.
-Integrate slide content where relevant, suggesting slide insertions and images.
+You may include paragraphs, explainers, eli5, and summaries for better understanding.
 The notes should be detailed enough that anyone reading them would have a clear understanding of everything discussed in the talk/lecture.
 The notes should not miss any critical points or examples mentioned in the transcript.
 Ensure the notes are easy to read, organized, and highlight important concepts, quotes, and terms.
@@ -40,9 +40,7 @@ Include important key points, examples, and explanations.
      - *Italics* for emphasis.
      - `Code formatting` for technical terms or code snippets.
      - > Blockquotes for notable quotes or one-liners.
-     - [Image_query] for relevant imagery, when applicable. Remember to describe the image inside the square brackets using plain english.
-   - Mention slide numbers where appropriate in format `[Slide number]`. Remember to put actual slide number here inside the square brackets.
-
+     
 2. **Content Structure:**
    - **Follow the sequence** of the original transcript.
    - **Divide content into sections and subsections** as logically as possible:
@@ -59,19 +57,14 @@ Include important key points, examples, and explanations.
    - Always try to add some sentences and quotes from the speaker to maintain the authenticity of the notes.
 
 3. **Content Integration:**
-   - **Integrate slide content** where relevant. Mention the slide number explicitly using `[Slide number]`.
-   - Example of slide content integration:
-      - **Slide 5**: Discusses the importance of algorithms in problem-solving.
-      [Slide 5]
-      - **Slide 6**: Provides examples of algorithmic problem-solving.
-      [Slide 6]
-   - You do not need to use all the slides. Just use the ones that are relevant to the content.
-   - If the content refers to a specific concept or example that can be visually represented, suggest inserting an image using `[Image_query]` Remember to describe the image inside the square brackets..
    - Ensure that **all sections are logically connected**, and the flow of information remains coherent and easy to follow.
+   - Do not include continued, incomplete sentences from the transcript. **Complete the sentences** to maintain readability.
+   - At the end, the notes will be compiled as one document, so ensure that the **formatting is consistent** throughout.
+   - You do not need to include "continued" in any place.
 
 4. **Additional Considerations:**
    - Do not ask any follow-up questions or clarifications. Start directly with the note creation.
-   - Assume that the content is related to computer science, project management, or technology unless specified otherwise.
+   - Assume that the content is related to consulting, economy, maths, physics, computer science, project management, or technology unless specified otherwise.
    - Maintain a professional tone, keeping the audience in mind (likely students, professionals, or researchers).
    - The notes should be **concise but informative**, capturing the essence of the talk without unnecessary detail.
    - Put longer paragraphs where it would help in explaining or elaborating a concept.
@@ -83,10 +76,7 @@ A Markdown-formatted document with well-structured notes that:
 - Reflects the sequence of the original transcript.
 - Includes sections, subsections, summaries, paragraph, explanations and bullet points.
 - Highlights important terms, quotes, and one-liners.
-- Suggests slide insertions and images where appropriate.
 - Provides clear, easy-to-read notes that are informative and organized.
-- Remeber to put in the slide numbers in the notes.
-- Remember to add images where necessary.
 """
 
 DOMAIN = (
@@ -97,11 +87,10 @@ logger = logging.getLogger(__name__)
 
 
 class NotesGenerator:
-    def __init__(self, title, transcript, slides) -> None:
+    def __init__(self, title, transcript) -> None:
         logger.info(f"Initializing NotesGenerator with title: {title}")
         self.title = title
         self.transcript = transcript
-        self.slides = slides
         self.ai = GeminiAI(system_instruction=SYSTEM_INSTRUCTION)
         logger.info("NotesGenerator initialized successfully")
 
@@ -147,11 +136,6 @@ if __name__ == "__main__":
     transcript = """
     This is the transcript of the talk. It contains the spoken words of the presenter or presenters in the session. The transcript may include speech errors and filler words.
     """
-    slides = {
-        1: "Slide 1 Content",
-        2: "Slide 2 Content",
-        3: "Slide 3 Content",
-    }
-    notes_generator = NotesGenerator(title, transcript, slides)
+    notes_generator = NotesGenerator(title, transcript)
     notes = notes_generator.generate_notes()
     print(notes)

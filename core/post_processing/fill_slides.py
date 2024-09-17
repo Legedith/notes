@@ -4,12 +4,12 @@ import re
 
 class SlideReplacer:
     @staticmethod
-    def replace_slides(markdown, slides_folder) -> str:
+    def replace_slides(markdown, slides_folder, path) -> str:
         # Rename the slides
         SlideReplacer.rename_slides(slides_folder)
 
         # Find all instances of [Slide number] and remove backticks if present
-        slide_pattern = re.compile(r"`?\[Slide (\d+)\]`?")
+        slide_pattern = re.compile(r"`?\[slide (\d+)\]`?")
         matches = slide_pattern.findall(markdown)
 
         # Get sorted list of images in the slides folder
@@ -23,10 +23,9 @@ class SlideReplacer:
             slide_number = int(match)
             if 1 <= slide_number <= len(images):
                 image_name = images[slide_number - 1]
-                image_url = f"http://127.0.0.1:5500/test/game/slides/{image_name}"
                 markdown = re.sub(
-                    rf"`?\[Slide {slide_number}\]`?",
-                    f'<br><img src="{image_url}" alt="Slide {slide_number}" width="600"><br>',
+                    rf"`?\[slide {slide_number}\]`?",
+                    f"![Slide {slide_number}]({path}{image_name}#center)",
                     markdown,
                 )
 

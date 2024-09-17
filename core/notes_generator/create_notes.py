@@ -17,6 +17,7 @@ from core.post_processing.timestamp import TimestampedNoteProcessor
 from tools.audio.audio_extractor.whisper_extractor import WhisperAudioExtractor
 from tools.text.generator.notes_generator import NotesGenerator
 from tools.text.slide_processor.extractors.img_handler import ImageHandler
+from tools.text.slide_processor.slide_inserter import SlideInserter
 from tools.text.text_formatter.computer_science_text_formatter import (
     ComputerScienceTextFormatter,
 )
@@ -27,7 +28,14 @@ logging.basicConfig(level=logging.INFO)
 
 
 class NotesCreator:
-    def __init__(self, youtube_url, slides_folder_path, tesseract_cmd=None) -> None:
+    def __init__(
+        self,
+        youtube_url,
+        slides_folder_path,
+        path,
+        language="en",
+        tesseract_cmd=None,
+    ) -> None:
         logger.info(
             f"Initializing NotesCreator with YouTube URL: {youtube_url} and "
             f"slides folder path: {slides_folder_path}",
@@ -39,6 +47,8 @@ class NotesCreator:
         self.whisper_audio_extractor = WhisperAudioExtractor()
         self.image_handler = ImageHandler(slides_folder_path, tesseract_cmd)
         self.text_formatter = ComputerScienceTextFormatter()
+        self.image_path = path
+        self.language = language
         logger.info("NotesCreator initialized successfully")
 
     def generate_notes(self) -> str:
@@ -55,7 +65,10 @@ class NotesCreator:
 
         # Extract text from audio
         logger.info("Extracting text from audio")
-        audio_text, segments = self.whisper_audio_extractor.extract_text(audio_path)
+        audio_text, segments = self.whisper_audio_extractor.extract_text(
+            audio_path,
+            language=self.language,
+        )
         cleaned_audio_text = self.text_formatter.format_text(
             audio_text,
             domain=video_title,
@@ -80,10 +93,16 @@ class NotesCreator:
         title = video_title
         transcript = cleaned_audio_text
         slides = cleaned_image_texts
-        notes_generator = NotesGenerator(title, transcript, slides)
+        notes_generator = NotesGenerator(title, transcript)
         notes_content = notes_generator.generate_notes()
         logger.info("Notes generated successfully")
         print(f"\nNotes Content: {notes_content}\n")
+
+        # Insert slides into notes
+        logger.info("Inserting slides into notes")
+        slide_inserter = SlideInserter(notes_content, slides)
+        notes_content = slide_inserter.insert_slides()
+        logger.info("Slides inserted into notes")
 
         # Process notes with timestamps
         logger.info("Processing notes with timestamps")
@@ -99,10 +118,11 @@ class NotesCreator:
         return NotesCreator.save_notes_to_file(
             new_notes_content,
             self.slides_folder_path,
+            self.image_path,
         )
 
     @staticmethod
-    def save_notes_to_file(notes_content, slides_folder_path) -> str:
+    def save_notes_to_file(notes_content, slides_folder_path, image_path) -> str:
         logger.info("Saving notes to a markdown file")
 
         # Determine the parent directory of the slides folder
@@ -116,6 +136,7 @@ class NotesCreator:
         replaced_markdown = SlideReplacer.replace_slides(
             notes_content,
             slides_folder_path,
+            image_path,
         )
         print(replaced_markdown)
 
@@ -133,9 +154,10 @@ class NotesCreator:
 # Usage
 if __name__ == "__main__":
     start = time.time()
-    youtube_url = "https://youtu.be/j2w_hYLzpi4"
-    slides_folder_path = "test/bcg/slides"
-    notes_creator = NotesCreator(youtube_url, slides_folder_path)
+    youtube_url = "https://youtu.be/TSYNHb6YBEE"
+    slides_folder_path = "test/econ/slides"
+    path = "/jott/econ/lec6/"
+    notes_creator = NotesCreator(youtube_url, slides_folder_path, path, language="hi")
     notes_creator.generate_notes()
     end = time.time()
     print(f"Time taken: {end - start} seconds")
